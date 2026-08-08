@@ -1,0 +1,19 @@
+# OS junk files
+.DS_Store
+Thumbs.db
+ 
+# npm dependencies — regenerated via `npm install` from package.json + package-lock.json
+node_modules/
+ 
+# Editor settings (keep local, don't force your setup on others)
+.vscode/*
+ 
+# Editor swap files (vim, etc.)
+**/*.swp
+ 
+# Debugging / build artifacts
+_debug/
+_metadata/
+dist/
+
+# .gitignore adapted from sebastianbenz
