@@ -1,11 +1,25 @@
 {
-    "name": "Hello Extensions",
-    "description": "Base Level Extension",
-    "version": "1.0",
     "manifest_version": 3,
-    "name": "Hello Extensions of the world!",
+    "name": "SpinBoxd",
+    "version": "0.1.0",
+    "description": "The Movie Night Extension Tool",
     "action": {
         "default_popup": "hello.html",
         "default_icon": "hello_extensions.png"
-    }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "32": "icons/icon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://letterboxd.com/",
+                "https://letterboxd.com/*/watchlist/*"
+            ],
+            "js": ["content.js"]
+        }
+    ]
 }
