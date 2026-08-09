@@ -1,0 +1,42 @@
+:root {
+  --poster-width: 92px;
+  --poster-height: 138px;
+  --visible-rows: 3;
+}
+
+#slots {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: linear-gradient(45deg, #2c3440 0%, #1a1f26 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.poster-box {
+  position: relative;
+  width: var(--poster-width);
+  height: calc(var(--poster-height) * var(--visible-rows));
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  background: #0a0c0f;
+}
+
+.posters {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+/* For now: using emojis so I set a big font size */
+.box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+}
