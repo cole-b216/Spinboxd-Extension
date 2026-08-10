@@ -4,44 +4,44 @@
 
     // Basic slot machine emojis pulled off the internet
     // Using these for now until I can scrape posters
-    const items = [
-        "7️⃣",
-        "❌",
-        "🍓",
-        "🍋",
-        "🍉",
-        "🍒",
-        "💵",
-        "🍊",
-        "🍎"
-    ];
+    const PLACEHOLDER = "❓";
+    const FILLER_COUNT = 12 // keep spinning posters small and few for visual clarity.
 
     const poster_boxes = document.querySelectorAll(".poster-box");
     const spinBtn = document.querySelector("#spin-btn")
     spinBtn.addEventListener("click", spin)
 
     for (const poster_box of poster_boxes) {
-        buildReel(poster_box, ["❓"], 0);
+        buildReel(poster_box, [PLACEHOLDER], 0);
     }
 
     async function spin() {
+        const { films } = await chrome.storage.local.get("films");
+
+        if (!films || films.length === 0) {
+            console.log("[Spinboxd] has no films loaded. Open a watchlist first.")
+            return;
+        }
+
         spinBtn.disabled = true; // Turn off spinning while already spinning
 
         // Pick one winner always. This will be displayed across each 'reel'
         // of the slot machine.
-        const target = items[Math.floor(Math.random() * items.length)];
+        const target = films[Math.floor(Math.random() * films.length)];
     
         const duration = 2;
 
         for (const poster_box of poster_boxes) {
             // Visual spinning flair -- winner is still already chosen from above.
-            const filler = shuffle(items);
-            const pool = ["❓", ...filler, target];
+            const filler = shuffle(films).slice(0, FILLER_COUNT);
+            const pool = [PLACEHOLDER, ...filler, target];
             buildReel(poster_box, pool, duration);
         }
     
         await new Promise((resolve) => setTimeout(resolve, duration * 1000));
         spinBtn.disabled = false;
+
+        console.log("Chose: ", target.title);
     }
     
     function buildReel(poster_box, pool, duration) {
@@ -53,7 +53,7 @@
         box.classList.add("box");
         box.style.width = poster_box.clientWidth + "px";
         box.style.height = poster_box.clientHeight + "px";
-        box.textContent = pool[i];
+        renderBoxContent(box, pool[i]);
         newPosters.appendChild(box);
         }
     
@@ -94,6 +94,19 @@
         });
         }
     }
+
+    function renderBoxContent(box, item) {
+        if (typeof item === "string") {
+        box.textContent = item;
+        return; // Testing film titles.
+        }
+    
+        const img = document.createElement("img");
+        img.src = item.posterURL;
+        img.alt = item.title;
+        box.appendChild(img);
+    }
+
 
     function shuffle([...arr]) {
         let m = arr.length;
