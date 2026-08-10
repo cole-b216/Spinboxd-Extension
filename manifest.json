@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "SpinBoxd",
-    "version": "0.1.0",
+    "version": "0.9.1",
     "description": "The Movie Night Extension Tool",
     "action": {
         "default_title": "SpinBoxd",
