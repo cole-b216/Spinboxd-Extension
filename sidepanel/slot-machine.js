@@ -104,6 +104,9 @@
         const img = document.createElement("img");
         img.src = item.posterURL;
         img.alt = item.title;
+        img.onerror = () => {
+            console.warn("[SpinBoxd] Poster failed to load:", item.title, item.posterURL);
+        };
         box.appendChild(img);
     }
 
