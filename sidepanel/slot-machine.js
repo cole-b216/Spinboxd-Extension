@@ -52,7 +52,7 @@
         box.classList.add("box");
         box.style.width = poster_box.clientWidth + "px";
         box.style.height = poster_box.clientHeight + "px";
-        box.textContent = pool[i];
+        renderBoxContent(box, pool[i]);
         newPosters.appendChild(box);
         }
     
@@ -93,6 +93,19 @@
         });
         }
     }
+
+    function renderBoxContent(box, item) {
+        if (typeof item === "string") {
+        box.textContent = item;
+        return; // Testing film titles.
+        }
+    
+        const img = document.createElement("img");
+        img.src = item.posterURL;
+        img.alt = item.title;
+        box.appendChild(img);
+    }
+
 
     function shuffle([...arr]) {
         let m = arr.length;
