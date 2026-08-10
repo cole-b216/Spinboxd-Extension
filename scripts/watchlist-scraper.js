@@ -16,7 +16,7 @@ function getUsernameFromURL() {
   return parts[0] ?? null;
 }
 
-function scrapeFilmFromDoc(doc) {
+function scrapeFilmsFromDoc(doc) {
   const titleEls = doc.querySelectorAll('.react-component[data-component-class="LazyPoster"]');
   
   return Array.from(titleEls).map((titleEl) => {
@@ -30,23 +30,31 @@ function scrapeFilmFromDoc(doc) {
   });
 }
 
-function scrapeCurrentPage() {
-  const frameEles = document.querySelectorAll("a.frame[data-original-title]");
+async function scrapeEveryPage() {
+  const username = getUsernameFromURL();
+  let allFilms = scrapeFilmsFromDoc(document);
 
-  return Array.from(frameEls).map((frameEl) => {
-    const title = frameEl.getAttribute("data-original-title"); // EX: "Punch-Drunk Love (2002)"
+  const MAX_PAGE = 100;
+  let page = 2;
 
-    const href = frameEl.getAttribute("href");
-    const slug = href ? href.split("/").filter(Boolean).pop() : null;
-    const filmUrl = href ? `https://letterboxd.com${href}` : null;
-    const posterEl = frameEl.previousElementSibling;
-    const posterUrl = posterEl?.querySelector("img")?.src ?? null;
+  while (page <= MAX_PAGE) {
+    const url = `${window.location.origin}/${username}/watchlist/page/${page}/`;
+    const res = await fetch(url);
+    if (!res.ok) break; // Guard when past user's last watchlist page
 
-    return { title, slug, filmUrl, posterUrl };
-  });
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const films = scrapeFilmsFromDocument(doc);
+
+    if (films.length === 0) break; // Another guard when out of films
+    allFilms = allFilms.concat(films);
+    page++;
+  }
+
+  return { username, films: allFilms };
 }
 
-const films = scrapeCurrentPage();
+const films = scrapeEveryPage();
 
 chrome.runtime.sendMessage({
   type: "WATCHLIST_SCRAPED",
