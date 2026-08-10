@@ -14,10 +14,20 @@
         "default_path": "sidepanel/sidepanel.html"
     },
     "content_scripts": [
-        
+        {
+            "matches": [
+                "https://letterboxd.com/*/watchlist/*",
+                "https://www.letterboxd.com/*/watchlist/*"
+            ],
+            "js": [
+                "scripts/watchlist-scraper.js"
+            ],
+            "run_at": "document_idle"
+        }
     ],
     "permissions": [
-        "sidePanel"
+        "sidePanel",
+        "storage"
     ],
     "icons": {
         "16": "icons/icon16.png",
