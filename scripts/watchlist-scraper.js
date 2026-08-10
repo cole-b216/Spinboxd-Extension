@@ -23,7 +23,7 @@ function scrapeFilmsFromDoc(doc) {
     const title = titleEl.getAttribute("data-item-name");
     const slug = titleEl.getAttribute("data-item-slug");
     const linkPath = titleEl.getAttribute("data-item-link");
-    const filmURL = linkPath ? 'https://letterboxd.com${linkPath}' : null;
+    const filmURL = linkPath ? `https://letterboxd.com${linkPath}` : null;
     const posterURL = titleEl.querySelector("img")?.src ?? null;
 
     return { title, slug, filmURL, posterURL };
@@ -44,7 +44,7 @@ async function scrapeEveryPage() {
 
     const html = await res.text();
     const doc = new DOMParser().parseFromString(html, "text/html");
-    const films = scrapeFilmsFromDocument(doc);
+    const films = scrapeFilmsFromDoc(doc);
 
     if (films.length === 0) break; // Another guard when out of films
     allFilms = allFilms.concat(films);
@@ -54,9 +54,13 @@ async function scrapeEveryPage() {
   return { username, films: allFilms };
 }
 
-const films = scrapeEveryPage();
+(async () => {
+  const { username, films } = await scrapeEveryPage();
+ 
+  chrome.runtime.sendMessage({
+    type: "WATCHLIST_SCRAPED",
+    username,
+    films,
+  });
+})();
 
-chrome.runtime.sendMessage({
-  type: "WATCHLIST_SCRAPED",
-  films,
-});
