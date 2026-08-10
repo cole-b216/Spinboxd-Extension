@@ -9,6 +9,7 @@
 
     const poster_boxes = document.querySelectorAll(".poster-box");
     const spinBtn = document.querySelector("#spin-btn")
+    const resultTitle = document.querySelector("#result-title");
     spinBtn.addEventListener("click", spin)
 
     for (const poster_box of poster_boxes) {
@@ -40,6 +41,8 @@
     
         await new Promise((resolve) => setTimeout(resolve, duration * 1000));
         spinBtn.disabled = false;
+
+        resultTitle.textContent = target.title;
 
         console.log("Chose: ", target.title);
     }

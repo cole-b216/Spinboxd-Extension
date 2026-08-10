@@ -31,6 +31,18 @@ header h3, #filters h2 {
     margin-bottom: 0.5rem;
 }
 
+#result-section {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9ab;
+    margin-bottom: 0.5rem;
+}
+
+#result-section span {
+    color: #fff;
+}
+
 #spin-btn {
     padding: .75rem 1.25rem;
     font-size: 0.9rem;
