@@ -5,6 +5,7 @@
     // Basic slot machine emojis pulled off the internet
     // Using these for now until I can scrape posters
     const PLACEHOLDER = "❓";
+    const FILLER_COUNT = 12 // keep spinning posters small and few for visual clarity.
 
     const poster_boxes = document.querySelectorAll(".poster-box");
     const spinBtn = document.querySelector("#spin-btn")
@@ -32,7 +33,7 @@
 
         for (const poster_box of poster_boxes) {
             // Visual spinning flair -- winner is still already chosen from above.
-            const filler = shuffle(films);
+            const filler = shuffle(films).slice(0, FILLER_COUNT);
             const pool = [PLACEHOLDER, ...filler, target];
             buildReel(poster_box, pool, duration);
         }
