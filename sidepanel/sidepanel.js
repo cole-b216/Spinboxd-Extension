@@ -1,3 +1,17 @@
+/*
+sidepanel/sidepanel.js
+Side panel script for the Spinboxd Chrome extension.
+ 
+Runs when the extension's side panel is opened. Reads the films previously
+saved to chrome.storage.local by service-worker.js (after a watchlist has
+been scraped and TMDb-enriched). Responsible for debugging logs to the console.
+This script does not itself scrape or any fetch data.
+ 
+This is an extra-step of verification for slot-machine.js, which actually
+handles the UI of the extension.
+*/
+
+
 console.log("working")
 
 chrome.storage.local.get("films", ({ films }) => {

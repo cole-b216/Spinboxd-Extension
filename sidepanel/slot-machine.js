@@ -1,3 +1,13 @@
+/*
+sidepanel/slot-machine.js
+Interactive film-picking UI for the Spinboxd Chrome extension.
+ 
+Runs inside the side panel and drives the visual "slot machine" that
+spins through poster images before landing on a randomly chosen film
+from the user's watcjhlist (read from chrome.storage.local, 
+and saved by service-worker.js).
+*/
+
 (function () {
 
     "use strict";
@@ -16,6 +26,17 @@
         buildReel(poster_box, [PLACEHOLDER], 0);
     }
 
+    /**
+     * Handler for the spin button. Picks one random "winner" film
+     * from the films stored in chrome.storage.local, then rebuilds every
+     * reel (.poster-box) with a shuffled filler pool ending on that same
+     * winner, so all reels land on the winner.
+     *
+     * Disables the spin button for the duration of the animation and
+     * updates #result-title with the winning film's title.
+     *
+     * @returns {Promise<void>}
+     */
     async function spin() {
         const { films } = await chrome.storage.local.get("films");
 
@@ -47,6 +68,24 @@
         console.log("Chose: ", target.title);
     }
     
+    /**
+     * Rebuilds a single "reel"'s contents and animates it scrolling up to
+     * reveal the last item in "pool" (the winner). Replaces the reel's
+     * ".posters" container with a fresh one populated from pool, starts
+     * it scrolled to the top item, then (if duration > 0) transitions it
+     * into view and leaves the winning film in the DOM.
+     *
+     * @param {Element} poster_box - The ".poster-box" element containing
+     *   the ".posters" reel to rebuild.
+     * @param {Array<string|{title: string, posterURL: string}>} pool - The
+     *   ordered list of items to render into the reel, last item first in
+     *   the DOM so it settles into view. Items are either the PLACEHOLDER
+     *   string or a film object.
+     * @param {number} duration - Animation duration in seconds. A value of
+     *   0 renders the reel statically with no transition (used for the
+     *   initial placeholder state).
+     * @returns {void}
+     */
     function buildReel(poster_box, pool, duration) {
         const oldPosters = poster_box.querySelector(".posters");
         const newPosters = oldPosters.cloneNode(false);
@@ -98,6 +137,15 @@
         }
     }
 
+    /**
+     * Renders a single reel box's content: either placeholder text (for
+     * the "❓" string item) or a film's poster image.
+     *
+     * @param {HTMLDivElement} box - The box element to render into.
+     * @param {string|{title: string, posterURL: string}} item - Either the
+     *   PLACEHOLDER string or a film object with title/posterURL.
+     * @returns {void}
+     */
     function renderBoxContent(box, item) {
         if (typeof item === "string") {
         box.textContent = item;
@@ -113,6 +161,13 @@
         box.appendChild(img);
     }
 
+    /**
+     * Returns a new array containing the same elements as "arr" in random
+     * order. Does not change the input array in any way.
+     *
+     * @param {Array} arr - The array to shuffle.
+     * @returns {Array} A new, randomly-ordered array.
+     */
 
     function shuffle([...arr]) {
         let m = arr.length;
